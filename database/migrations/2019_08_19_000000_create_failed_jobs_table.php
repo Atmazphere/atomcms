@@ -8,8 +8,10 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         if (config('habbo.migrations.rename_tables') && Schema::hasTable('failed_jobs')) {
             Schema::rename('failed_jobs', sprintf('failed_jobs_%s', time()));
@@ -28,8 +30,10 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('failed_jobs');
     }

@@ -7,16 +7,17 @@ use App\Models\WebsiteIpWhitelist;
 use App\Services\IpLookupService;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
 class VPNCheckerMiddleware
 {
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
         // Skip check if vpn checker is disabled
-        if (! (int) setting('vpn_block_enabled') || setting('ipdata_api_key') === 'ADD-API-KEY-HERE') {
+        if (!(int)setting('vpn_block_enabled') || setting('ipdata_api_key') === 'ADD-API-KEY-HERE') {
             return $next($request);
         }
+
 
         // Skip check if the rank is allowed to bypass the checker
         if (hasPermission('bypass_vpn')) {
@@ -56,7 +57,7 @@ class VPNCheckerMiddleware
         }
 
         // Fetch all whitelisted ASNs
-        $asnWhitelist = WebsiteIpWhitelist::select('asn')
+        $asnWhitelist =  WebsiteIpWhitelist::select('asn')
             ->where('whitelist_asn', '=', '1')
             ->get()
             ->pluck('asn')
@@ -68,7 +69,7 @@ class VPNCheckerMiddleware
         }
 
         // Fetch all blacklisted ASNs
-        $asnBlacklist = WebsiteIpBlacklist::select('asn')
+        $asnBlacklist =  WebsiteIpBlacklist::select('asn')
             ->where('blacklist_asn', '=', '1')
             ->get()
             ->pluck('asn')

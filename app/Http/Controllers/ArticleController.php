@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\WebsiteArticle;
-use App\Models\WebsiteArticleReaction;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Models\WebsiteArticle;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
+use App\Models\WebsiteArticleReaction;
 
 class ArticleController extends Controller
 {
-    public function index(): View
+    public function index()
     {
         return view('community.articles', [
             'articles' => WebsiteArticle::with(['user:id,username,look'])
@@ -20,7 +18,7 @@ class ArticleController extends Controller
         ]);
     }
 
-    public function show(WebsiteArticle $article): View
+    public function show(WebsiteArticle $article)
     {
         $myReactions = [];
         $articleData = $article->load(['user.permission:id,rank_name,staff_background', 'reactions:article_id,user_id,reaction', 'reactions.user:id,username', 'comments.user:id,username,look']);
@@ -37,21 +35,21 @@ class ArticleController extends Controller
         ]);
     }
 
-    public function toggleReaction(WebsiteArticle $article, Request $request): JsonResponse
+    public function toggleReaction(WebsiteArticle $article, Request $request)
     {
         $reaction = $request->get('reaction');
 
-        if (! is_string($reaction) || ! in_array($reaction, config('habbo.reactions'))) {
+        if (!is_string($reaction) || !in_array($reaction, config('habbo.reactions'))) {
             return response()->json(['success' => false]);
         }
 
         $existingReaction = WebsiteArticleReaction::getReaction($article->id, Auth::id(), $reaction);
 
         if ($existingReaction) {
-            $existingReaction->update(['active' => ! $existingReaction->active]);
+            $existingReaction->update(['active' => !$existingReaction->active]);
         } else {
             $article->reactions()->create([
-                'reaction' => $reaction,
+                'reaction' => $reaction
             ]);
         }
 

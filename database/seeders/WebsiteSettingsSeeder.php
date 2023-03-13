@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class WebsiteSettingsSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
         $settings = [
             [
@@ -112,7 +112,7 @@ class WebsiteSettingsSeeder extends Seeder
             ],
             [
                 'key' => 'maintenance_message',
-                'value' => sprintf('%s is currently undergoing maintenance. We will be back shortly!', setting('hotel_name')),
+                'value' => 'Atom is currently undergoing maintenance. We will be back shortly!',
                 'comment' => 'The maintenance message displayed to users while maintenance is activated',
             ],
             [
@@ -214,21 +214,6 @@ class WebsiteSettingsSeeder extends Seeder
                 'key' => 'max_comment_per_article',
                 'value' => '2',
                 'comment' => 'Specifies the amount of times a user can comment per article',
-            ],
-            [
-                'key' => 'rare_values_icons_path',
-                'value' => '/ms-swf/dcr/icons',
-                'comment' => 'The path to the rare values icons',
-            ],
-            [
-                'key' => 'enable_caching',
-                'value' => '0',
-                'comment' => 'Determines whether the cache is enabled or not',
-            ],
-            [
-                'key' => 'cache_timer',
-                'value' => '30',
-                'comment' => 'Determines how long a cache will last before being refreshed',
             ],
         ];
 

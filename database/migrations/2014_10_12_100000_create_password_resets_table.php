@@ -8,8 +8,10 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         if (config('habbo.migrations.rename_tables') && Schema::hasTable('password_resets')) {
             Schema::rename('password_resets', sprintf('password_resets_%s', time()));
@@ -24,8 +26,10 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('password_resets');
     }

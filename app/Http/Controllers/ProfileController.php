@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Guild;
 use App\Models\GuildMember;
-use App\Models\MessengerFriendship;
 use App\Models\User;
-use Illuminate\View\View;
+use App\Models\UserBadge;
+use App\Models\MessengerFriendship;
+use App\Models\Room;
 
 class ProfileController extends Controller
 {
-    public function __invoke(User $user): View
+    public function __invoke(User $user)
     {
         $user = $user->load(['badges' => function ($badges) {
             $badges->where('slot_id', '>', '0')
@@ -17,13 +19,13 @@ class ProfileController extends Controller
                 ->take(5)
                 ->get();
         },
-            'rooms' => function ($rooms) {
-                $rooms->select('id', 'owner_id', 'name', 'users')
-                    ->orderByDesc('users')
-                    ->orderBy('id')
-                    ->take(4)
-                    ->get();
-            }, ]);
+        'rooms' => function ($rooms) {
+            $rooms->select('id', 'owner_id', 'name', 'users')
+                ->orderByDesc('users')
+                ->orderBy('id')
+                ->take(4)
+                ->get();
+        }]);
 
         $friends = MessengerFriendship::select('user_two_id')
             ->where('user_one_id', '=', $user->id)

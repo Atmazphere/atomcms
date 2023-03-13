@@ -4,9 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    public function up(): void
+return new class extends Migration {
+    public function up()
     {
         Schema::table('website_articles', function (Blueprint $table) {
             $storedKeys = [];
@@ -25,7 +24,7 @@ return new class extends Migration
                 $droppedColumn = true;
             }
 
-            if ($droppedColumn || ! Schema::hasColumn('website_articles', 'user_id')) {
+            if ($droppedColumn || !Schema::hasColumn('website_articles', 'user_id')) {
                 $table->addColumn('integer', 'user_id')->after('full_story');
                 $table->foreign('user_id')->references('id')->on('users')->constrained()->cascadeOnDelete();
             } else {
@@ -34,7 +33,7 @@ return new class extends Migration
         });
     }
 
-    public function down(): void
+    public function down()
     {
         Schema::table('website_articles', function (Blueprint $table) {
         });
