@@ -8,16 +8,20 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::dropIfExists('users_session_logs');
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::create('users_session_logs', function (Blueprint $table) {
             $table->id();

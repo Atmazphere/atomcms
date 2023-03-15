@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 class WebsiteLanguageSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
         $languages = [
             ['country_code' => 'en', 'language' => 'English'],

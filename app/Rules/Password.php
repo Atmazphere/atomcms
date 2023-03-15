@@ -35,7 +35,9 @@ class Password implements Rule
     /**
      * Determine if the validation rule passes.
      *
+     * @param  string  $attribute
      * @param  mixed  $value
+     * @return bool
      */
     public function passes($attribute, $value): bool
     {
@@ -58,6 +60,8 @@ class Password implements Rule
 
     /**
      * Get the validation error message.
+     *
+     * @return string
      */
     public function message(): string
     {
@@ -67,24 +71,24 @@ class Password implements Rule
 
         return match (true) {
             $this->requireUppercase
-            && ! $this->requireNumeric
-            && ! $this->requireSpecialCharacter => __(
+            && !$this->requireNumeric
+            && !$this->requireSpecialCharacter => __(
                 'The :attribute must be at least :length characters and contain at least one uppercase character.',
                 [
                     'length' => $this->length,
                 ]
             ),
             $this->requireNumeric
-            && ! $this->requireUppercase
-            && ! $this->requireSpecialCharacter => __(
+            && !$this->requireUppercase
+            && !$this->requireSpecialCharacter => __(
                 'The :attribute must be at least :length characters and contain at least one number.',
                 [
                     'length' => $this->length,
                 ]
             ),
             $this->requireSpecialCharacter
-            && ! $this->requireUppercase
-            && ! $this->requireNumeric => __(
+            && !$this->requireUppercase
+            && !$this->requireNumeric => __(
                 'The :attribute must be at least :length characters and contain at least one special character.',
                 [
                     'length' => $this->length,
@@ -92,7 +96,7 @@ class Password implements Rule
             ),
             $this->requireUppercase
             && $this->requireNumeric
-            && ! $this->requireSpecialCharacter => __(
+            && !$this->requireSpecialCharacter => __(
                 'The :attribute must be at least :length characters and contain at least one uppercase character and one number.',
                 [
                     'length' => $this->length,
@@ -100,7 +104,7 @@ class Password implements Rule
             ),
             $this->requireUppercase
             && $this->requireSpecialCharacter
-            && ! $this->requireNumeric => __(
+            && !$this->requireNumeric => __(
                 'The :attribute must be at least :length characters and contain at least one uppercase character and one special character.',
                 [
                     'length' => $this->length,
@@ -116,7 +120,7 @@ class Password implements Rule
             ),
             $this->requireNumeric
             && $this->requireSpecialCharacter
-            && ! $this->requireUppercase => __(
+            && !$this->requireUppercase => __(
                 'The :attribute must be at least :length characters and contain at least one special character and one number.',
                 [
                     'length' => $this->length,
@@ -130,6 +134,9 @@ class Password implements Rule
 
     /**
      * Set the minimum length of the password.
+     *
+     * @param  int  $length
+     * @return $this
      */
     public function length(int $length)
     {
@@ -140,8 +147,10 @@ class Password implements Rule
 
     /**
      * Indicate that at least one uppercase character is required.
+     *
+     * @return $this
      */
-    public function requireUppercase(): static
+    public function requireUppercase()
     {
         $this->requireUppercase = true;
 
@@ -150,8 +159,10 @@ class Password implements Rule
 
     /**
      * Indicate that at least one numeric digit is required.
+     *
+     * @return $this
      */
-    public function requireNumeric(): static
+    public function requireNumeric()
     {
         $this->requireNumeric = true;
 
@@ -160,8 +171,10 @@ class Password implements Rule
 
     /**
      * Indicate that at least one special character is required.
+     *
+     * @return $this
      */
-    public function requireSpecialCharacter(): static
+    public function requireSpecialCharacter()
     {
         $this->requireSpecialCharacter = true;
 
@@ -170,8 +183,11 @@ class Password implements Rule
 
     /**
      * Set the message that should be used when the rule fails.
+     *
+     * @param  string  $message
+     * @return $this
      */
-    public function withMessage(string $message): static
+    public function withMessage(string $message)
     {
         $this->message = $message;
 

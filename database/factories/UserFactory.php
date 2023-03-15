@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserFactory extends Factory
 {
-    public function definition(): array
+    public function definition()
     {
         return [
             'username' => fake()->userName(),

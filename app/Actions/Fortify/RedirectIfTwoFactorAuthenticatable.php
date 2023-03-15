@@ -2,10 +2,10 @@
 
 namespace App\Actions\Fortify;
 
+
 use App\Models\User;
 use App\Rules\GoogleRecaptchaRule;
 use Illuminate\Auth\Events\Failed;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +15,6 @@ use Laravel\Fortify\Events\TwoFactorAuthenticationChallenged;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\LoginRateLimiter;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfTwoFactorAuthenticatable
 {
@@ -36,6 +35,8 @@ class RedirectIfTwoFactorAuthenticatable
     /**
      * Create a new controller instance.
      *
+     * @param  \Illuminate\Contracts\Auth\StatefulGuard  $guard
+     * @param  \Laravel\Fortify\LoginRateLimiter  $limiter
      * @return void
      */
     public function __construct(StatefulGuard $guard, LoginRateLimiter $limiter)
@@ -47,15 +48,17 @@ class RedirectIfTwoFactorAuthenticatable
     /**
      * Handle the incoming request.
      *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  callable  $next
      * @return mixed
      */
-    public function handle(Request $request, callable $next)
+    public function handle($request, $next)
     {
         $user = $this->validateCredentials($request);
 
         if (Fortify::confirmsTwoFactorAuthentication()) {
-            if ($user?->two_factor_secret &&
-                ! is_null($user?->two_factor_confirmed_at) &&
+            if (optional($user)->two_factor_secret &&
+                ! is_null(optional($user)->two_factor_confirmed_at) &&
                 in_array(TwoFactorAuthenticatable::class, class_uses_recursive($user))) {
                 return $this->twoFactorChallengeResponse($request, $user);
             } else {
@@ -63,7 +66,7 @@ class RedirectIfTwoFactorAuthenticatable
             }
         }
 
-        if ($user?->two_factor_secret &&
+        if (optional($user)->two_factor_secret &&
             in_array(TwoFactorAuthenticatable::class, class_uses_recursive($user))) {
             return $this->twoFactorChallengeResponse($request, $user);
         }
@@ -74,9 +77,10 @@ class RedirectIfTwoFactorAuthenticatable
     /**
      * Attempt to validate the incoming credentials.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
-    protected function validateCredentials(Request $request)
+    protected function validateCredentials($request)
     {
         if (Fortify::$authenticateUsingCallback) {
             return tap(call_user_func(Fortify::$authenticateUsingCallback, $request), function ($user) use ($request) {
@@ -108,6 +112,7 @@ class RedirectIfTwoFactorAuthenticatable
                 ->where('username', '=', $request->input('username'))
                 ->first();
 
+
             if (setting('maintenance_enabled') === '1' && setting('min_maintenance_login_rank') > $user->rank) {
                 throw ValidationException::withMessages([
                     'username' => __('Only staff can login during maintenance!'),
@@ -119,10 +124,12 @@ class RedirectIfTwoFactorAuthenticatable
     /**
      * Throw a failed authentication validation exception.
      *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function throwFailedAuthenticationException(Request $request): void
+    protected function throwFailedAuthenticationException($request)
     {
         $this->limiter->increment($request);
 
@@ -133,8 +140,12 @@ class RedirectIfTwoFactorAuthenticatable
 
     /**
      * Fire the failed authentication attempt event with the given arguments.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|null  $user
+     * @return void
      */
-    protected function fireFailedEvent(Request $request, Authenticatable $user = null): void
+    protected function fireFailedEvent($request, $user = null)
     {
         event(new Failed(config('fortify.guard'), $user, [
             Fortify::username() => $request->{Fortify::username()},
@@ -145,9 +156,11 @@ class RedirectIfTwoFactorAuthenticatable
     /**
      * Get the two factor authentication enabled response.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  mixed  $user
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function twoFactorChallengeResponse(Request $request, $user): Response
+    protected function twoFactorChallengeResponse($request, $user)
     {
         $request->session()->put([
             'login.id' => $user->getKey(),
@@ -163,7 +176,7 @@ class RedirectIfTwoFactorAuthenticatable
 
     private function convertUserPassword(User $user, string $password)
     {
-        if ($user->password == md5($password)) {
+        if($user->password == md5($password)) {
             $user->update([
                 'password' => Hash::make($password),
             ]);
@@ -176,7 +189,7 @@ class RedirectIfTwoFactorAuthenticatable
             'g-recaptcha-response' => ['sometimes', 'string', new GoogleRecaptchaRule()],
         ];
 
-        $messages = [
+        $messages =  [
             'g-recaptcha-response.required' => __('The Google recaptcha must be completed'),
             'g-recaptcha-response.string' => __('The google recaptcha was submitted with an invalid type'),
         ];

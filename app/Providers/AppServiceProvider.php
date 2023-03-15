@@ -11,8 +11,10 @@ class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
+     *
+     * @return void
      */
-    public function register(): void
+    public function register()
     {
         $this->app->bind(
             \Illuminate\Foundation\Vite::class,
@@ -32,8 +34,10 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
+     *
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
         if (config('habbo.site.force_https')) {
             URL::forceScheme('https');

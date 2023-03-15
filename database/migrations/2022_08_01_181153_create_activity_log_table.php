@@ -1,12 +1,12 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
+class CreateActivityLogTable extends Migration
 {
-    public function up(): void
+    public function up()
     {
         if (config('habbo.migrations.rename_tables') && Schema::hasTable(config('activitylog.table_name'))) {
             Schema::rename(config('activitylog.table_name'), sprintf('%s_%s', config('activitylog.table_name'), time()));
@@ -24,8 +24,8 @@ return new class extends Migration
         });
     }
 
-    public function down(): void
+    public function down()
     {
         Schema::connection(config('activitylog.database_connection'))->dropIfExists(config('activitylog.table_name'));
     }
-};
+}
