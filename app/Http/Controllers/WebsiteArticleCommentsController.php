@@ -18,12 +18,15 @@ class WebsiteArticleCommentsController extends Controller
             ]);
         }
 
+<<<<<<< HEAD
         if (! $article->can_comment) {
             return redirect()->back()->withErrors([
                 'message' => __('This article has been locked from receiving comments'),
             ]);
         }
 
+=======
+>>>>>>> parent of c336ca4 (:sparkles: Possibility to lock articles from receiving comments)
         $article->comments()->create([
             'user_id' => $user->id,
             'comment' => $request->input('comment'),
