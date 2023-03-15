@@ -53,7 +53,7 @@
             </a>
 
             <a href="{{ route('staff-applications.index') }}" class="dropdown-item dark:text-gray-200 dark:hover:bg-gray-700">
-                {{ __('Staff applications') }}
+                {{ __('Staff Applications') }}
             </a>
 
             <a href="{{ route('photos.index') }}" class="dropdown-item dark:text-gray-200 dark:hover:bg-gray-700">
