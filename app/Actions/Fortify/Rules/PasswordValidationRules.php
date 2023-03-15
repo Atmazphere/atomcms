@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify\Rules;
 
+
 use App\Rules\Password;
 
 trait PasswordValidationRules

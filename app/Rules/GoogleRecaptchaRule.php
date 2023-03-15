@@ -2,16 +2,15 @@
 
 namespace App\Rules;
 
-use Closure;
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Validation\InvokableRule;
 
 class GoogleRecaptchaRule implements InvokableRule
 {
-    public function __invoke(string $attribute, mixed $value, Closure $fail)
+    public function __invoke($attribute, $value, $fail)
     {
         // If recaptcha is disabled
-        if (! (int) setting('google_recaptcha_enabled')) {
+        if (!(int)setting('google_recaptcha_enabled')) {
             return true;
         }
 

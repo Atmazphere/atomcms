@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\WebsiteLanguage;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 
 class LocaleController extends Controller
 {
-    public function __invoke($locale): RedirectResponse
+    public function __invoke($locale)
     {
         $languages = WebsiteLanguage::select('country_code')
             ->get()

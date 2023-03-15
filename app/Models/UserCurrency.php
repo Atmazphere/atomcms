@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class UserCurrency extends Model
 {
     protected $table = 'users_currency';
-
     protected $primaryKey = 'user_id';
-
     public $timestamps = false;
 
     public function user(): BelongsTo

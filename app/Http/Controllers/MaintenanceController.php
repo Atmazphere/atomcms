@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
-
 class MaintenanceController extends Controller
 {
-    public function __invoke(): View
+    public function __invoke()
     {
         return view('maintenance');
     }

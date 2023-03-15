@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\WebsiteArticle;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
 
 class MeController extends Controller
 {
-    public function __invoke(): View
+    public function show()
     {
         $user = Auth::user();
 
